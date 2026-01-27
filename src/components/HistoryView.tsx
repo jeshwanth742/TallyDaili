@@ -299,6 +299,7 @@ export const HistoryView = () => {
                 placeholder={modalConfig.step === 'amount' ? '0.00' : 'e.g. Rent, Gift, Trip...'}
                 initialValue=""
                 type={modalConfig.step === 'amount' ? 'number' : 'text'}
+                shouldCloseOnSave={modalConfig.step !== 'amount'}
             />
         </div >
     );

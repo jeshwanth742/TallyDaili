@@ -9,6 +9,7 @@ interface InputModalProps {
     initialValue?: string;
     placeholder?: string;
     type?: 'text' | 'number';
+    shouldCloseOnSave?: boolean;
 }
 
 export const InputModal = ({
@@ -18,7 +19,8 @@ export const InputModal = ({
     title,
     initialValue = '',
     placeholder = '',
-    type = 'text'
+    type = 'text',
+    shouldCloseOnSave = true
 }: InputModalProps) => {
     const [value, setValue] = useState(initialValue);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -31,14 +33,16 @@ export const InputModal = ({
                 inputRef.current?.select();
             }, 100);
         }
-    }, [isOpen, initialValue]);
+    }, [isOpen, initialValue, title, type]); // Reset on title/type change too
 
     if (!isOpen) return null;
 
     const handleSubmit = (e?: React.FormEvent) => {
         e?.preventDefault();
         onSave(value);
-        onClose();
+        if (shouldCloseOnSave) {
+            onClose();
+        }
     };
 
     return (
