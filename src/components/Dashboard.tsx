@@ -187,7 +187,7 @@ export const Dashboard = () => {
 
             <button
                 onClick={openExpenseModal}
-                className="fixed bottom-8 right-8 bg-primary text-black p-5 rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 group z-30 border border-primary/50"
+                className="fixed bottom-24 right-8 bg-primary text-black p-5 rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 group z-30 border border-primary/50"
                 aria-label="Add Expense"
             >
                 <Plus size={32} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-300" />

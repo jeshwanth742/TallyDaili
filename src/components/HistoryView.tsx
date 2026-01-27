@@ -5,6 +5,8 @@ import { ChevronLeft, ChevronRight, Search, ListIcon, Calendar as CalIcon, Trash
 import { getCategoryIcon } from '../utils/categories';
 import { db } from '../db/db';
 
+import { InputModal } from './InputModal';
+
 export const HistoryView = () => {
     const { transactions, plannedPayments, metrics, isLoading, budget } = useBudget();
     const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
@@ -12,23 +14,41 @@ export const HistoryView = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [searchQuery, setSearchQuery] = useState('');
 
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        step: 'amount' | 'note';
+        amount: string;
+        note: string;
+    }>({
+        isOpen: false,
+        step: 'amount',
+        amount: '',
+        note: ''
+    });
+
     if (isLoading || !metrics || !budget) return null;
 
-    const handleSchedule = async () => {
-        const amount = prompt('Amount to plan:');
-        if (!amount || isNaN(parseFloat(amount))) return;
+    const handleScheduleStart = () => {
+        setModalConfig({ isOpen: true, step: 'amount', amount: '', note: '' });
+    };
 
-        const note = prompt('What is this planned spending for? (e.g. Rent, Gift, Trip)');
-        if (!note) return;
-
-        await db.plannedPayments.add({
-            amount: parseFloat(amount),
-            category: 'Other',
-            note: note,
-            date: selectedDate,
-            budgetId: budget.id!,
-            isExecuted: false
-        });
+    const handleModalSave = async (val: string) => {
+        if (modalConfig.step === 'amount') {
+            if (!val || isNaN(parseFloat(val))) return;
+            setModalConfig(prev => ({ ...prev, step: 'note', amount: val }));
+        } else {
+            // Save Note & Finish
+            if (!val) return;
+            await db.plannedPayments.add({
+                amount: parseFloat(modalConfig.amount),
+                category: 'Other',
+                note: val,
+                date: selectedDate,
+                budgetId: budget.id!,
+                isExecuted: false
+            });
+            setModalConfig(prev => ({ ...prev, isOpen: false }));
+        }
     };
 
     const handleExecute = async (p: any) => {
@@ -73,7 +93,7 @@ export const HistoryView = () => {
                     <h2 className="text-xl font-bold text-text-primary">History</h2>
                     <div className="flex gap-2">
                         <button
-                            onClick={handleSchedule}
+                            onClick={handleScheduleStart}
                             className="bg-primary/10 text-primary p-2 rounded-xl border border-primary/20 hover:bg-primary/20 transition-all flex items-center gap-2"
                             title="Schedule/Reserve Money"
                         >
@@ -270,6 +290,17 @@ export const HistoryView = () => {
                     </div>
                 )}
             </main>
-        </div>
+            </main>
+
+            <InputModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                onSave={handleModalSave}
+                title={modalConfig.step === 'amount' ? 'Amount to Plan' : 'What is this for?'}
+                placeholder={modalConfig.step === 'amount' ? '0.00' : 'e.g. Rent, Gift, Trip...'}
+                initialValue=""
+                type={modalConfig.step === 'amount' ? 'number' : 'text'}
+            />
+        </div >
     );
 };

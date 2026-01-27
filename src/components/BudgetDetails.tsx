@@ -4,6 +4,8 @@ import { db } from '../db/db';
 import { format, addDays } from 'date-fns';
 import { X, Download, Trash2, Edit2, Share2, Globe, ArrowRight, Shield, Calendar } from 'lucide-react';
 import { exportTransactionsToCSV } from '../utils/export';
+import { InputModal } from './InputModal';
+import { useState } from 'react';
 
 export const BudgetDetails = () => {
     const { isBudgetDetailsOpen, closeBudgetDetails } = useBudgetStore();
@@ -15,6 +17,23 @@ export const BudgetDetails = () => {
     const spentPercentage = Math.min((totalSpent / totalBudget) * 100, 100);
     const timePercentage = Math.min((daysPassed / totalCycleDays) * 100, 100);
 
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        initialValue: string;
+        onSave: (val: string) => void;
+        type?: 'text' | 'number';
+    }>({
+        isOpen: false,
+        title: '',
+        initialValue: '',
+        onSave: () => { },
+    });
+
+    const openModal = (title: string, initialValue: string, onSave: (val: string) => void, type: 'text' | 'number' = 'number') => {
+        setModalConfig({ isOpen: true, title, initialValue, onSave, type });
+    };
+
     const handleFinishEarly = async () => {
         if (confirm('Finish this budget cycle early? This will end the current period.')) {
             await db.budgets.update(budget.id!, { isActive: false });
@@ -22,27 +41,38 @@ export const BudgetDetails = () => {
         }
     };
 
-    const handleEditBudget = async () => {
-        const newTotal = prompt('Enter new total budget amount:', totalBudget.toString());
-        if (newTotal && !isNaN(parseFloat(newTotal))) {
-            await db.budgets.update(budget.id!, { totalAmount: parseFloat(newTotal) });
-        }
+    const handleEditBudget = () => {
+        openModal('Total Budget', totalBudget.toString(), async (val) => {
+            const num = parseFloat(val);
+            if (!isNaN(num)) await db.budgets.update(budget.id!, { totalAmount: num });
+        });
     };
 
-    const handleEditFixed = async () => {
+    const handleEditFixed = () => {
         const currentFixed = budget.fixedExpenses || 0;
-        const newFixed = prompt('Enter your total "Planned Spending" for this cycle (e.g. Rent, EMI, Bills):', currentFixed.toString());
-        if (newFixed !== null && !isNaN(parseFloat(newFixed))) {
-            await db.budgets.update(budget.id!, { fixedExpenses: parseFloat(newFixed) });
-        }
+        openModal('Planned Spending', currentFixed.toString(), async (val) => {
+            const num = parseFloat(val);
+            if (!isNaN(num)) await db.budgets.update(budget.id!, { fixedExpenses: num });
+        });
     };
 
-    const handleEditPeriod = async () => {
-        const days = prompt('Enter number of days for this budget cycle:', totalCycleDays.toString());
-        if (days && !isNaN(parseInt(days))) {
-            const newEndDate = addDays(budget.startDate, parseInt(days));
-            await db.budgets.update(budget.id!, { endDate: newEndDate });
-        }
+    const handleEditPeriod = () => {
+        openModal('Budget Days', totalCycleDays.toString(), async (val) => {
+            const days = parseInt(val);
+            if (days && !isNaN(days)) {
+                const newEndDate = addDays(budget.startDate, days);
+                await db.budgets.update(budget.id!, { endDate: newEndDate });
+            }
+        });
+    };
+
+    const handleEditCurrency = () => {
+        openModal('Currency Code', currency, async (val) => {
+            if (val && val.length >= 1) {
+                await db.budgets.update(budget.id!, { currencySymbol: val });
+                window.location.reload();
+            }
+        }, 'text');
     };
 
     // Circular Progress Math for Days Remaining
@@ -151,12 +181,7 @@ export const BudgetDetails = () => {
                                 color: 'text-primary'
                             },
                             {
-                                icon: Globe, label: 'Currency', action: () => {
-                                    const newSym = prompt('Currency Code:', currency);
-                                    if (newSym && newSym.length >= 2) {
-                                        db.budgets.update(budget.id!, { currencySymbol: newSym }).then(() => window.location.reload());
-                                    }
-                                }, val: currency, color: undefined
+                                icon: Globe, label: 'Currency', action: handleEditCurrency, val: currency, color: undefined
                             },
                             {
                                 icon: Calendar, label: 'Budget Period', action: handleEditPeriod,
@@ -201,6 +226,16 @@ export const BudgetDetails = () => {
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
+
+            <InputModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                onSave={modalConfig.onSave}
+                title={modalConfig.title}
+                initialValue={modalConfig.initialValue}
+                type={modalConfig.type}
+            />
+        </div >
     );
 };
