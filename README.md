@@ -22,11 +22,6 @@ Visual breakdown of your spending patterns with an interactive pie chart, catego
 
 A heat-map calendar view showing spending intensity by day. Pulsating indicators mark days with **Planned Spending** reservations. Switch between Calendar and List views to see detailed transaction breakdowns.
 
-### Planned Spending - Future Protection
-![Planned Spending](./screenshots/planned-spending.png)
-
-Schedule future expenses (Rent, EMI, Bills) that automatically reduce your daily allowance. One-tap conversion from planned to actual expense when the bill is paid.
-
 ---
 
 ## 🌟 Key Features
