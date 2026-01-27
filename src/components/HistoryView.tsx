@@ -290,7 +290,6 @@ export const HistoryView = () => {
                     </div>
                 )}
             </main>
-            </main>
 
             <InputModal
                 isOpen={modalConfig.isOpen}

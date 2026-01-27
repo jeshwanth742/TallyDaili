@@ -226,7 +226,7 @@ export const BudgetDetails = () => {
                     </div>
                 </div>
             </div>
-            </div>
+
 
             <InputModal
                 isOpen={modalConfig.isOpen}
