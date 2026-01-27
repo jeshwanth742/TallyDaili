@@ -3,6 +3,7 @@ import { useBudgetStore } from '../store/useBudgetStore';
 import { LayoutDashboard, Calendar, BarChart2 } from 'lucide-react';
 import { AddExpenseModal } from './AddExpenseModal';
 import { BudgetDetails } from './BudgetDetails';
+import { ErrorBoundary } from './ErrorBoundary';
 
 interface LayoutProps {
     children: ReactNode;
@@ -14,7 +15,9 @@ export const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="min-h-screen bg-background text-text-primary flex flex-col relative">
             <main className="flex-1 overflow-y-auto pb-24">
-                {children}
+                <ErrorBoundary>
+                    {children}
+                </ErrorBoundary>
             </main>
 
             {/* Bottom Navigation */}
@@ -47,7 +50,9 @@ export const Layout = ({ children }: LayoutProps) => {
             </nav>
 
             <AddExpenseModal />
-            <BudgetDetails />
+            <ErrorBoundary>
+                <BudgetDetails />
+            </ErrorBoundary>
         </div>
     );
 };

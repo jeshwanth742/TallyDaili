@@ -34,8 +34,10 @@ export const TransactionsView = () => {
                                     <Icon size={20} />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-text-primary font-bold text-sm">{t.category}</p>
-                                    <p className="text-text-secondary text-xs">{format(t.date, 'MMM d, yyyy')} {t.note ? `• ${t.note}` : ''}</p>
+                                    <p className="text-text-primary font-bold text-sm">
+                                        {t.category === 'Others' && t.note ? t.note : t.category}
+                                    </p>
+                                    <p className="text-text-secondary text-xs">{format(t.date, 'MMM d, yyyy')} {t.category !== 'Others' && t.note ? `• ${t.note}` : ''}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">

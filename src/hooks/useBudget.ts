@@ -31,9 +31,19 @@ export function useBudget() {
         return { isLoading: false, budget: null, transactions: [], plannedPayments: [], metrics: null };
     }
 
+    // Defensive Data Parser
+    const safeDate = (d: any) => {
+        if (d instanceof Date && !isNaN(d.getTime())) return d;
+        if (typeof d === 'string' || typeof d === 'number') {
+            const parsed = new Date(d);
+            return isNaN(parsed.getTime()) ? new Date() : parsed;
+        }
+        return new Date();
+    };
+
     // If transactions are still loading (useLiveQuery output is undefined initially)
-    const txs = transactions || [];
-    const pps = plannedPayments || [];
+    const txs = (transactions || []).map(t => ({ ...t, date: safeDate(t.date) }));
+    const pps = (plannedPayments || []).map(p => ({ ...p, date: safeDate(p.date) }));
 
     const totalSpent = txs.reduce((acc, t) => acc + t.amount, 0);
 
@@ -50,13 +60,19 @@ export function useBudget() {
     const spendableBudget = Math.max(0, remainingBudget - fixedBuffer);
 
     const today = new Date();
-    const endDate = activeBudget.endDate;
+
+    const startDate = safeDate(activeBudget.startDate);
+    const endDate = safeDate(activeBudget.endDate);
+
+    // Sanitize Currency Defensive
+    const rawSymbol = activeBudget.currencySymbol || '$'; // Default to $ if missing
+    const currencyCode = (rawSymbol.length === 3) ? rawSymbol : (CURRENCY_MAP[rawSymbol] || 'USD');
 
     // Calculate days remaining (inclusive of today)
     let daysRemaining = differenceInCalendarDays(endDate, today) + 1;
 
     // Total cycle duration
-    const totalCycleDays = differenceInCalendarDays(endDate, activeBudget.startDate) + 1;
+    const totalCycleDays = differenceInCalendarDays(endDate, startDate) + 1;
     const daysPassed = totalCycleDays - daysRemaining;
 
     // Handle edge cases
@@ -96,9 +112,7 @@ export function useBudget() {
             return acc;
         }, {} as Record<string, number>);
 
-    // Sanitize Currency
-    const rawSymbol = activeBudget.currencySymbol;
-    const currencyCode = (rawSymbol.length === 3) ? rawSymbol : (CURRENCY_MAP[rawSymbol] || 'USD');
+    // Sanitize Currency (Already done above)
 
     return {
         isLoading: false,

@@ -62,9 +62,10 @@ export const Dashboard = () => {
 
                     <button
                         onClick={openBudgetDetails}
-                        className="p-2 hover:bg-surface rounded-full transition-colors text-text-secondary hover:text-white"
+                        className="p-3 hover:bg-surface rounded-full transition-colors text-text-secondary hover:text-white relative z-50"
+                        aria-label="Settings"
                     >
-                        <Settings className="w-5 h-5" />
+                        <Settings className="w-6 h-6" />
                     </button>
                 </div>
             </header>
@@ -167,8 +168,10 @@ export const Dashboard = () => {
                                         <Icon size={18} />
                                     </div>
                                     <div className="text-left">
-                                        <p className="text-text-primary font-black text-xs uppercase tracking-wider">{t.category}</p>
-                                        <p className="text-text-secondary text-[9px] font-bold opacity-60">{format(t.date, 'MMM d')} {t.note ? `• ${t.note}` : ''}</p>
+                                        <p className="text-text-primary font-black text-xs uppercase tracking-wider">
+                                            {t.category === 'Others' && t.note ? t.note : t.category}
+                                        </p>
+                                        <p className="text-text-secondary text-[9px] font-bold opacity-60">{format(t.date, 'MMM d')} {t.category !== 'Others' && t.note ? `• ${t.note}` : ''}</p>
                                     </div>
                                 </div>
                                 <span className="text-text-primary font-mono font-black text-sm">
@@ -187,10 +190,10 @@ export const Dashboard = () => {
 
             <button
                 onClick={openExpenseModal}
-                className="fixed bottom-24 right-8 bg-primary text-black p-4 rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 group z-30 border border-primary/50"
+                className="fixed bottom-24 right-6 bg-primary text-black p-3 rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 group z-50 border border-primary/50"
                 aria-label="Add Expense"
             >
-                <Plus size={28} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-300" />
+                <Plus size={24} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-300" />
             </button>
         </div>
     );

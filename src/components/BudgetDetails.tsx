@@ -2,7 +2,7 @@ import { useBudget } from '../hooks/useBudget';
 import { useBudgetStore } from '../store/useBudgetStore';
 import { db } from '../db/db';
 import { format, addDays } from 'date-fns';
-import { X, Download, Trash2, Edit2, Share2, Globe, ArrowRight, Shield, Calendar } from 'lucide-react';
+import { X, Download, Trash2, Edit2, Globe, ArrowRight, Shield, Calendar } from 'lucide-react';
 import { exportTransactionsToCSV } from '../utils/export';
 import { InputModal } from './InputModal';
 import { useState } from 'react';
@@ -10,12 +10,6 @@ import { useState } from 'react';
 export const BudgetDetails = () => {
     const { isBudgetDetailsOpen, closeBudgetDetails } = useBudgetStore();
     const { budget, metrics, transactions } = useBudget();
-
-    if (!isBudgetDetailsOpen || !budget || !metrics) return null;
-
-    const { totalSpent, totalBudget, daysRemaining, totalCycleDays, daysPassed, currency } = metrics;
-    const spentPercentage = Math.min((totalSpent / totalBudget) * 100, 100);
-    const timePercentage = Math.min((daysPassed / totalCycleDays) * 100, 100);
 
     const [modalConfig, setModalConfig] = useState<{
         isOpen: boolean;
@@ -29,6 +23,26 @@ export const BudgetDetails = () => {
         initialValue: '',
         onSave: () => { },
     });
+
+    const safeFormat = (date: any, fmt: string) => {
+        try {
+            if (!date) return 'N/A';
+            const d = new Date(date);
+            if (isNaN(d.getTime())) return 'Invalid Date';
+            return format(d, fmt);
+        } catch (e) {
+            console.error('Date formatting error:', e);
+            return 'Error';
+        }
+    };
+
+    console.log('BudgetDetails Render:', { isBudgetDetailsOpen, budget, metrics });
+
+    if (!isBudgetDetailsOpen || !budget || !metrics) return null;
+
+    const { totalSpent, totalBudget, daysRemaining, totalCycleDays, daysPassed, currency } = metrics;
+    const spentPercentage = Math.min((totalSpent / totalBudget) * 100, 100);
+    const timePercentage = Math.min((daysPassed / totalCycleDays) * 100, 100);
 
     const openModal = (title: string, initialValue: string, onSave: (val: string) => void, type: 'text' | 'number' = 'number') => {
         setModalConfig({ isOpen: true, title, initialValue, onSave, type });
@@ -60,7 +74,7 @@ export const BudgetDetails = () => {
         openModal('Budget Days', totalCycleDays.toString(), async (val) => {
             const days = parseInt(val);
             if (days && !isNaN(days)) {
-                const newEndDate = addDays(budget.startDate, days);
+                const newEndDate = addDays(new Date(budget.startDate), days);
                 await db.budgets.update(budget.id!, { endDate: newEndDate });
             }
         });
@@ -83,7 +97,7 @@ export const BudgetDetails = () => {
     const strokeDashoffset = circumference - (remainingPercentage * circumference);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
             <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={closeBudgetDetails} />
 
@@ -140,8 +154,8 @@ export const BudgetDetails = () => {
                                     <div className="h-full bg-primary/40 rounded-full" style={{ width: `${timePercentage}%` }} />
                                 </div>
                                 <div className="flex justify-between text-[7px] text-text-secondary font-black uppercase tracking-widest opacity-40">
-                                    <span>{format(budget.startDate, 'dd MMM')}</span>
-                                    <span>{format(budget.endDate, 'dd MMM')}</span>
+                                    <span>{safeFormat(budget.startDate, 'dd MMM')}</span>
+                                    <span>{safeFormat(budget.endDate, 'dd MMM')}</span>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +188,6 @@ export const BudgetDetails = () => {
                     {/* Actions List */}
                     <div className="grid grid-cols-1 gap-2">
                         {[
-                            { icon: Share2, label: 'Distribute', action: () => alert('Optimized! Liquidity redistributed.'), color: 'text-primary', val: undefined },
                             {
                                 icon: Shield, label: 'Reminder', action: handleEditFixed,
                                 val: new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(budget.fixedExpenses || 0),

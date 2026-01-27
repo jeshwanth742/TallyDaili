@@ -7,11 +7,23 @@ import { CATEGORIES, getCategoryIcon } from '../utils/categories';
 
 export const Analytics = () => {
     const { transactions, budget, metrics } = useBudget();
+    const [selectedDetail, setSelectedDetail] = useState<{ label: string, amount: number, txs: typeof transactions } | null>(null);
     const [range, setRange] = useState<'today' | 'week' | 'month' | 'year'>('week');
 
     if (!transactions || !budget || !metrics) return null;
 
     const { currency } = metrics;
+
+    const safeFormat = (date: any, fmt: string) => {
+        try {
+            if (!date) return 'N/A';
+            const d = new Date(date);
+            if (isNaN(d.getTime())) return 'Invalid Date';
+            return format(d, fmt);
+        } catch (e) {
+            return 'Error';
+        }
+    };
 
     // 1. Budget Summary Polishing
     const spentPercentage = Math.min((metrics.totalSpent / metrics.totalBudget) * 100, 100);
@@ -39,29 +51,35 @@ export const Analytics = () => {
             return h;
         });
         barData = hours.map(h => {
-            const amount = transactions.filter(t =>
+            const bucketTxs = transactions.filter(t =>
                 t.date >= h && t.date < new Date(h.getTime() + 4 * 60 * 60 * 1000)
-            ).reduce((sum, t) => sum + t.amount, 0);
+            );
             return {
                 label: format(h, 'HH:mm'),
-                amount
+                amount: bucketTxs.reduce((sum, t) => sum + t.amount, 0),
+                txs: bucketTxs
             };
         });
     } else if (range === 'week') {
         const days = Array.from({ length: 7 }, (_, i) => subDays(now, 6 - i));
-        barData = days.map(d => ({
-            label: format(d, 'dd/MM'),
-            amount: transactions.filter(t => isSameDay(t.date, d)).reduce((sum, t) => sum + t.amount, 0)
-        }));
+        barData = days.map(d => {
+            const bucketTxs = transactions.filter(t => isSameDay(t.date, d));
+            return {
+                label: format(d, 'dd/MM'),
+                amount: bucketTxs.reduce((sum, t) => sum + t.amount, 0),
+                txs: bucketTxs
+            };
+        });
     } else if (range === 'month') {
         const blocks = Array.from({ length: 6 }, (_, i) => subDays(now, (5 - i) * 5));
         barData = blocks.map(b => {
-            const amount = transactions.filter(t =>
+            const bucketTxs = transactions.filter(t =>
                 t.date >= subDays(b, 4) && t.date <= b
-            ).reduce((sum, t) => sum + t.amount, 0);
+            );
             return {
                 label: format(b, 'dd MMM'),
-                amount
+                amount: bucketTxs.reduce((sum, t) => sum + t.amount, 0),
+                txs: bucketTxs
             };
         });
     } else if (range === 'year') {
@@ -69,14 +87,18 @@ export const Analytics = () => {
             start: startOfYear(now),
             end: now
         });
-        barData = months.map(m => ({
-            label: format(m, 'MMM'),
-            amount: transactions.filter(t => isSameMonth(t.date, m)).reduce((sum, t) => sum + t.amount, 0)
-        }));
+        barData = months.map(m => {
+            const bucketTxs = transactions.filter(t => isSameMonth(t.date, m));
+            return {
+                label: format(m, 'MMM'),
+                amount: bucketTxs.reduce((sum, t) => sum + t.amount, 0),
+                txs: bucketTxs
+            };
+        });
     }
 
     return (
-        <div className="p-6 pt-12 min-h-full flex flex-col pb-24 text-center bg-background animate-in fade-in duration-500">
+        <div className="p-6 pt-12 min-h-full flex flex-col pb-24 text-center bg-background animate-in fade-in duration-500 relative">
             <h1 className="text-2xl font-black mb-8 tracking-[0.2em] uppercase text-text-secondary opacity-50">Analytics</h1>
 
             {/* Range Selector */}
@@ -84,7 +106,7 @@ export const Analytics = () => {
                 {(['today', 'week', 'month', 'year'] as const).map(r => (
                     <button
                         key={r}
-                        onClick={() => setRange(r)}
+                        onClick={() => { setRange(r); setSelectedDetail(null); }}
                         className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${range === r ? 'bg-primary text-black shadow-lg shadow-primary/20' : 'text-text-secondary hover:text-white'}`}
                     >
                         {r}
@@ -192,7 +214,10 @@ export const Analytics = () => {
             <div className="mb-12 bg-surface/20 p-6 rounded-[2.5rem] border border-neutral-800/30">
                 <h3 className="text-left text-[10px] font-black text-text-secondary mb-8 uppercase tracking-[0.2em] opacity-50 flex items-center justify-between">
                     <span>Spending Trend</span>
-                    <span className="font-mono lowercase tracking-normal">{range} view</span>
+                    <span className="font-mono lowercase tracking-normal flex items-center gap-2">
+                        <span className="text-[8px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full">TAP BARS</span>
+                        {range} view
+                    </span>
                 </h3>
                 <div className="h-56 w-full">
                     <ResponsiveContainer width="100%" height="100%">
@@ -217,15 +242,31 @@ export const Analytics = () => {
                                                 <p className="text-sm font-black text-primary font-mono">
                                                     {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(payload[0].value as number)}
                                                 </p>
+                                                <p className="text-[8px] text-text-secondary font-bold mt-1">Tap for details</p>
                                             </div>
                                         );
                                     }
                                     return null;
                                 }}
                             />
-                            <Bar dataKey="amount" radius={[6, 6, 6, 6]}>
-                                {barData.map((_, index) => (
-                                    <Cell key={`cell-${index}`} fill={'#00E676'} fillOpacity={0.8} />
+                            {/* Make Bars Interactive */}
+                            <Bar
+                                dataKey="amount"
+                                radius={[6, 6, 6, 6]}
+                                onClick={(data) => {
+                                    if (data && data.payload && data.payload.txs && data.payload.txs.length > 0) {
+                                        setSelectedDetail(data.payload);
+                                    }
+                                }}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {barData.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={selectedDetail?.label === entry.label ? '#ffffff' : '#00E676'}
+                                        fillOpacity={selectedDetail?.label === entry.label ? 1 : 0.8}
+                                        className="transition-all duration-300 hover:opacity-100"
+                                    />
                                 ))}
                             </Bar>
                         </BarChart>
@@ -273,6 +314,57 @@ export const Analytics = () => {
                     ))}
                 </div>
             </div>
+
+            {/* Drilldown Modal (Details) */}
+            {selectedDetail && (
+                <div className="fixed inset-0 z[200] flex items-end sm:items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedDetail(null)} />
+                    <div className="relative w-full max-w-sm bg-[#1A1A1A] border border-neutral-800 rounded-[2rem] p-6 max-h-[60vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom duration-300">
+                        <div className="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 className="text-lg font-black text-white">{selectedDetail.label}</h3>
+                                <p className="text-[10px] text-text-secondary uppercase tracking-widest">
+                                    {selectedDetail.txs.length} Transactions
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-xl font-mono font-black text-primary">
+                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(selectedDetail.amount)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="overflow-y-auto pr-2 -mr-2 space-y-2 flex-1 no-scrollbar">
+                            {[...selectedDetail.txs].sort((a, b) => b.amount - a.amount).map(t => {
+                                const Icon = getCategoryIcon(t.category);
+                                return (
+                                    <div key={t.id} className="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-neutral-900 rounded-lg text-text-secondary">
+                                                <Icon size={16} />
+                                            </div>
+                                            <div className="text-left">
+                                                <p className="text-xs font-bold text-white">{t.category}</p>
+                                                {t.note && <p className="text-[9px] text-text-secondary opacity-70">{t.note}</p>}
+                                            </div>
+                                        </div>
+                                        <span className="text-xs font-mono font-bold text-white">
+                                            {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(t.amount)}
+                                        </span>
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        <button
+                            onClick={() => setSelectedDetail(null)}
+                            className="mt-6 w-full py-3 bg-white text-black rounded-xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] transition-transform"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

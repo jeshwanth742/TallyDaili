@@ -20,7 +20,7 @@ export const CATEGORIES: Category[] = [
     { id: 'Travel', label: 'Travel', icon: Plane },
     { id: 'Savings', label: 'Save', icon: PiggyBank },
     { id: 'Personal', label: 'Pers', icon: User },
-    { id: 'Misc', label: 'Misc', icon: MoreHorizontal },
+    { id: 'Others', label: 'Others', icon: MoreHorizontal },
 ];
 
 export const getCategoryIcon = (id: string): LucideIcon => {

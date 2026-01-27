@@ -25,13 +25,13 @@ export const NumericKeypad = ({ value, onChange, onDone }: NumericKeypadProps) =
     };
 
     return (
-        <div className="grid grid-cols-4 gap-4 w-full select-none">
+        <div className="grid grid-cols-4 gap-2 w-full select-none max-w-[260px] mx-auto">
             {/* Numbers 7, 8, 9 */}
             {['7', '8', '9'].map(n => (
                 <button
                     key={n}
                     onClick={() => handlePress(n)}
-                    className="aspect-square flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-3xl font-black font-mono active:scale-90 transition-all shadow-lg"
+                    className="h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-lg font-black font-mono active:scale-90 transition-all shadow-lg"
                 >
                     {n}
                 </button>
@@ -40,10 +40,10 @@ export const NumericKeypad = ({ value, onChange, onDone }: NumericKeypadProps) =
             {/* Delete button (X icon) */}
             <button
                 onClick={handleDelete}
-                className="aspect-square flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-text-secondary active:scale-95 transition-all shadow-lg"
+                className="h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-text-secondary active:scale-95 transition-all shadow-lg"
             >
-                <div className="p-2 bg-neutral-900 rounded-lg border border-white/5">
-                    <X size={20} strokeWidth={3} />
+                <div className="p-1.5 bg-neutral-900 rounded-lg border border-white/5">
+                    <X size={14} strokeWidth={3} />
                 </div>
             </button>
 
@@ -52,7 +52,7 @@ export const NumericKeypad = ({ value, onChange, onDone }: NumericKeypadProps) =
                 <button
                     key={n}
                     onClick={() => handlePress(n)}
-                    className="aspect-square flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-3xl font-black font-mono active:scale-90 transition-all shadow-lg"
+                    className="h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-lg font-black font-mono active:scale-90 transition-all shadow-lg"
                 >
                     {n}
                 </button>
@@ -63,7 +63,7 @@ export const NumericKeypad = ({ value, onChange, onDone }: NumericKeypadProps) =
                 onClick={onDone}
                 className="col-start-4 row-start-2 row-span-3 bg-primary text-black flex items-center justify-center rounded-full shadow-[0_0_30px_rgba(0,230,118,0.2)] hover:scale-[1.02] active:scale-95 transition-all border border-white/10"
             >
-                <Check size={40} strokeWidth={4} />
+                <Check size={20} strokeWidth={4} />
             </button>
 
             {/* Numbers 1, 2, 3 */}
@@ -71,7 +71,7 @@ export const NumericKeypad = ({ value, onChange, onDone }: NumericKeypadProps) =
                 <button
                     key={n}
                     onClick={() => handlePress(n)}
-                    className="aspect-square flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-3xl font-black font-mono active:scale-90 transition-all shadow-lg"
+                    className="h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-lg font-black font-mono active:scale-90 transition-all shadow-lg"
                 >
                     {n}
                 </button>
@@ -80,13 +80,13 @@ export const NumericKeypad = ({ value, onChange, onDone }: NumericKeypadProps) =
             {/* Bottom Row: 0 and . */}
             <button
                 onClick={() => handlePress('0')}
-                className="col-span-2 aspect-[2.1/1] flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-3xl font-black font-mono active:scale-90 transition-all shadow-lg"
+                className="col-span-2 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-lg font-black font-mono active:scale-90 transition-all shadow-lg"
             >
                 0
             </button>
             <button
                 onClick={() => handlePress('.')}
-                className="aspect-square flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-3xl font-black font-mono active:scale-90 transition-all shadow-lg"
+                className="h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full border border-white/5 text-white text-lg font-black font-mono active:scale-90 transition-all shadow-lg"
             >
                 .
             </button>
