@@ -1,73 +1,71 @@
-# React + TypeScript + Vite
+# TallyDaili 💸
+### Tactical Daily Budgeting. 100% Private. Built with AI.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TallyDaili is a premium, minimalist budget tracker designed for **tactical daily liquidity**. Unlike traditional apps that focus on monthly categories, TallyDaili tells you exactly how much you can spend **today** while protecting your future bills.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Key Features
 
-## React Compiler
+- **Dynamic Daily Allowance**: Automatically calculates your "Safe to Spend" number for today, adjusting in real-time as you log expenses.
+- **Planned Spending**: Reserve funds for future obligations (Rent, EMI, Bills). These reservations act as a "shield," hidden from your daily spending power.
+- **Heat-map Calendar**: A high-fidelity visual history of your spending velocity.
+- **Privacy First**: 100% local storage via Dexie.js. No cloud, no tracking, no account required.
+- **PWA Ready**: Install it on your Android or iPhone directly from the browser for a native full-screen experience.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🤖 Built with AI: The Development Story
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+TallyDaili was created through a high-intensity collaborative process between the **User** and an **Advanced Agentic AI (Antigravity)**.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### How AI was used:
+1.  **Iterative Architecture**: The AI didn't just write code; it architected the system using a formal `project_blueprint.md`, ensuring scalability and logic consistency before the first line was written.
+2.  **Competitor Intelligence**: The AI performed a real-time `competitor_analysis.md` (vs. Monefy, Goodbudget, Buckwheat) to identify market gaps, leading to the creation of the unique **Planned Spending** shield logic.
+3.  **Advanced Pair Programming**: The User provided tactical direction and UI preferences, while the AI managed state logic, persistence (IndexedDB), and high-performance React optimization.
+4.  **Mobile-First Refinement**: The AI optimized all touch targets, spacing, and accessibility for a premium 100% Android-compliant feel.
+5.  **Automated Verification**: Every feature was verified through AI-driven build checks and linting to ensure production-grade stability.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Framework**: React 19 + TypeScript + Vite
+- **Storage**: IndexedDB (via **Dexie.js**)
+- **Styling**: Vanilla CSS / Tailwind CSS
+- **Icons**: Lucide React
+- **Animations**: Framer Motion / CSS Transitions
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🚀 Getting Started
+
+1.  **Clone the repo**:
+    ```bash
+    git clone https://github.com/jeshwanth742/TallyDaili.git
+    cd TallyDaili
+    ```
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Run locally**:
+    ```bash
+    npm run dev
+    ```
+4.  **Build for production**:
+    ```bash
+    npm run build
+    ```
+
+---
+
+## 📱 Mobile Installation
+
+Open the hosted URL on your mobile phone:
+- **Android**: Tap the 3 dots (⋮) -> **"Install App"**.
+- **iPhone**: Tap **Share** -> **"Add to Home Screen"**.
+
+---
+
+*Created with ❤️ by Jeshwanth & Antigravity AI.*
