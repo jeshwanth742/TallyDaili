@@ -14,16 +14,7 @@ export const Analytics = () => {
 
     const { currency } = metrics;
 
-    const safeFormat = (date: any, fmt: string) => {
-        try {
-            if (!date) return 'N/A';
-            const d = new Date(date);
-            if (isNaN(d.getTime())) return 'Invalid Date';
-            return format(d, fmt);
-        } catch (e) {
-            return 'Error';
-        }
-    };
+
 
     // 1. Budget Summary Polishing
     const spentPercentage = Math.min((metrics.totalSpent / metrics.totalBudget) * 100, 100);
