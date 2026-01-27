@@ -31,13 +31,13 @@ export const Dashboard = () => {
 
             <header className="w-full max-w-md flex justify-between items-center z-20 mb-8 pt-6">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-primary/5 border border-white/5 bg-surface/50">
+                    <div className="w-8 h-8 rounded-xl overflow-hidden shadow-lg shadow-primary/5 border border-white/5 bg-surface/50">
                         <img src="/logo.png" alt="TallyDaili" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
                         <span className="text-primary font-black text-xl logo-fallback">$</span>
                     </div>
                     <div className="flex flex-col">
-                        <h1 className="text-white text-lg font-black tracking-tight leading-none">Tally<span className="text-primary italic">Daili</span></h1>
-                        <div className="flex items-center gap-2 mt-1">
+                        <h1 className="text-white text-base font-black tracking-tight leading-none">Tally<span className="text-primary italic">Daili</span></h1>
+                        <div className="flex items-center gap-2 mt-0.5">
                             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                             <span className="text-[9px] text-text-secondary font-bold uppercase tracking-widest opacity-60">Cycle Active</span>
                         </div>
@@ -49,7 +49,7 @@ export const Dashboard = () => {
                         <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group relative">
                             <Shield size={14} />
                             <div className="absolute top-10 right-0 bg-surface border border-neutral-800 p-2 rounded-lg text-[8px] font-black uppercase tracking-widest hidden group-hover:block whitespace-nowrap z-50">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(fixedBuffer)} Planned Spending
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(fixedBuffer)} Reminder
                             </div>
                         </div>
                     )}
@@ -62,9 +62,9 @@ export const Dashboard = () => {
 
                     <button
                         onClick={openBudgetDetails}
-                        className="p-3 hover:bg-surface rounded-full transition-colors text-text-secondary hover:text-white"
+                        className="p-2 hover:bg-surface rounded-full transition-colors text-text-secondary hover:text-white"
                     >
-                        <Settings className="w-6 h-6" />
+                        <Settings className="w-5 h-5" />
                     </button>
                 </div>
             </header>
@@ -187,10 +187,10 @@ export const Dashboard = () => {
 
             <button
                 onClick={openExpenseModal}
-                className="fixed bottom-24 right-8 bg-primary text-black p-5 rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 group z-30 border border-primary/50"
+                className="fixed bottom-24 right-8 bg-primary text-black p-4 rounded-2xl shadow-2xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all duration-300 group z-30 border border-primary/50"
                 aria-label="Add Expense"
             >
-                <Plus size={32} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-300" />
+                <Plus size={28} strokeWidth={3} className="group-hover:rotate-90 transition-transform duration-300" />
             </button>
         </div>
     );

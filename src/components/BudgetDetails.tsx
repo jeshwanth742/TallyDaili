@@ -50,7 +50,7 @@ export const BudgetDetails = () => {
 
     const handleEditFixed = () => {
         const currentFixed = budget.fixedExpenses || 0;
-        openModal('Planned Spending', currentFixed.toString(), async (val) => {
+        openModal('Reminder', currentFixed.toString(), async (val) => {
             const num = parseFloat(val);
             if (!isNaN(num)) await db.budgets.update(budget.id!, { fixedExpenses: num });
         });
@@ -176,7 +176,7 @@ export const BudgetDetails = () => {
                         {[
                             { icon: Share2, label: 'Distribute', action: () => alert('Optimized! Liquidity redistributed.'), color: 'text-primary', val: undefined },
                             {
-                                icon: Shield, label: 'Planned Spending', action: handleEditFixed,
+                                icon: Shield, label: 'Reminder', action: handleEditFixed,
                                 val: new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(budget.fixedExpenses || 0),
                                 color: 'text-primary'
                             },

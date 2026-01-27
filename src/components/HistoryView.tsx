@@ -98,7 +98,7 @@ export const HistoryView = () => {
                             title="Schedule/Reserve Money"
                         >
                             <Plus size={18} />
-                            <span className="text-[10px] font-black uppercase tracking-widest pr-1 whitespace-nowrap">Planned Spending</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest pr-1 whitespace-nowrap">Reminder</span>
                         </button>
                         <div className="bg-surface p-1 rounded-xl flex border border-neutral-800">
                             <button
@@ -190,7 +190,7 @@ export const HistoryView = () => {
                                                 </div>
                                                 <div className="text-left">
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-[7px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full uppercase font-black tracking-tighter">Planned Spending</span>
+                                                        <span className="text-[7px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full uppercase font-black tracking-tighter">Reminder</span>
                                                     </div>
                                                     <p className="text-[10px] text-primary/60 font-bold leading-tight mt-0.5">{p.note}</p>
                                                 </div>
