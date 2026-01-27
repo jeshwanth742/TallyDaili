@@ -5,11 +5,36 @@ TallyDaili is a premium, minimalist budget tracker designed for **tactical daily
 
 ---
 
+## 📸 Screenshots
+
+### Dashboard - Your Daily Command Center
+![Dashboard](./screenshots/dashboard.png)
+
+The Dashboard shows your **Daily Remaining** amount in bold - this is your "Safe to Spend" number for today. The heat-map health card shows budget usage, average daily spending, and days remaining. The Shield icon indicates your **Planned Spending** buffer.
+
+### Analytics - Spending Intelligence
+![Analytics](./screenshots/analytics.png)
+
+Visual breakdown of your spending patterns with an interactive pie chart, category-wise distribution, and time-range bar graphs (Today/Week/Month/Year). Track your spending velocity and identify trends.
+
+### History - Calendar & Transactions
+![History](./screenshots/history.png)
+
+A heat-map calendar view showing spending intensity by day. Pulsating indicators mark days with **Planned Spending** reservations. Switch between Calendar and List views to see detailed transaction breakdowns.
+
+### Planned Spending - Future Protection
+![Planned Spending](./screenshots/planned-spending.png)
+
+Schedule future expenses (Rent, EMI, Bills) that automatically reduce your daily allowance. One-tap conversion from planned to actual expense when the bill is paid.
+
+---
+
 ## 🌟 Key Features
 
 - **Dynamic Daily Allowance**: Automatically calculates your "Safe to Spend" number for today, adjusting in real-time as you log expenses.
 - **Planned Spending**: Reserve funds for future obligations (Rent, EMI, Bills). These reservations act as a "shield," hidden from your daily spending power.
 - **Heat-map Calendar**: A high-fidelity visual history of your spending velocity.
+- **Flexible Budget Cycles**: Choose 7, 14, or 30-day periods during setup, or adjust on-the-fly in settings.
 - **Privacy First**: 100% local storage via Dexie.js. No cloud, no tracking, no account required.
 - **PWA Ready**: Install it on your Android or iPhone directly from the browser for a native full-screen experience.
 
@@ -34,7 +59,8 @@ TallyDaili was created through a high-intensity collaborative process between th
 - **Storage**: IndexedDB (via **Dexie.js**)
 - **Styling**: Vanilla CSS / Tailwind CSS
 - **Icons**: Lucide React
-- **Animations**: Framer Motion / CSS Transitions
+- **State Management**: Zustand
+- **Date Utilities**: date-fns
 
 ---
 
@@ -62,9 +88,47 @@ TallyDaili was created through a high-intensity collaborative process between th
 
 ## 📱 Mobile Installation
 
-Open the hosted URL on your mobile phone:
-- **Android**: Tap the 3 dots (⋮) -> **"Install App"**.
-- **iPhone**: Tap **Share** -> **"Add to Home Screen"**.
+### Option 1: Local Network (No Hosting)
+1. Ensure your phone and computer are on the same Wi-Fi
+2. Run `npm run dev -- --host`
+3. Open `http://YOUR_LOCAL_IP:5173` on your phone
+4. Tap **"Add to Home Screen"** or **"Install App"**
+
+### Option 2: Deploy to Vercel/Netlify
+1. Push this repo to GitHub
+2. Connect to [Vercel](https://vercel.com) or [Netlify](https://netlify.com)
+3. Deploy and share the URL with anyone
+4. Install as PWA from the hosted URL
+
+---
+
+## 🎯 How to Capture Screenshots
+
+To add the actual screenshots to this README:
+
+1. **Create screenshots folder**:
+   ```bash
+   mkdir screenshots
+   ```
+
+2. **Run the app** and capture these views:
+   - **Dashboard**: Main view showing Daily Remaining
+   - **Analytics**: Tap 2nd tab, capture pie chart view
+   - **History**: Tap 3rd tab, capture calendar view
+   - **Planned Spending**: In History, tap "+ Planned Spending" and capture the modal
+
+3. **Save screenshots** as:
+   - `screenshots/dashboard.png`
+   - `screenshots/analytics.png`
+   - `screenshots/history.png`
+   - `screenshots/planned-spending.png`
+
+4. **Commit and push**:
+   ```bash
+   git add screenshots/
+   git commit -m "Add app screenshots"
+   git push origin main
+   ```
 
 ---
 
