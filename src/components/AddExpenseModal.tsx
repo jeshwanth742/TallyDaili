@@ -46,7 +46,7 @@ export const AddExpenseModal = () => {
             <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={handleClose} />
 
             {/* Modal Glass Container */}
-            <div className="relative w-full max-w-2xl bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-[0_0_100px_rgba(0,0,0,1)] animate-in zoom-in-95 duration-300">
+            <div className="relative w-full max-w-sm bg-[#121212] p-5 rounded-[2rem] border border-white/5 shadow-[0_0_100px_rgba(0,0,0,1)] zoom-in-95 duration-300">
 
                 {/* Header */}
                 <div className="flex justify-between items-center mb-10">
@@ -59,8 +59,8 @@ export const AddExpenseModal = () => {
                 {/* Main Content: Amount Display */}
                 <div className="flex flex-col items-center mb-12">
                     <div className="flex items-center justify-center">
-                        <span className="text-3xl text-text-secondary font-black font-mono mr-4 opacity-40">{getCurrencySymbol(budget.currencySymbol)}</span>
-                        <div className="text-8xl font-black font-mono text-white tracking-tighter flex items-center">
+                        <span className="text-3xl text-text-secondary font-black font-mono mr-2 sm:mr-4 opacity-40">{getCurrencySymbol(budget.currencySymbol)}</span>
+                        <div className="text-6xl sm:text-8xl font-black font-mono text-white tracking-tighter flex items-center">
                             {amount}
                             <div className="w-1.5 h-16 bg-primary ml-4 rounded-full animate-pulse shadow-[0_0_20px_rgba(0,230,118,0.5)]" />
                         </div>
@@ -69,9 +69,9 @@ export const AddExpenseModal = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                     {/* Left: Categories & Notes */}
-                    <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-6 sm:gap-10">
                         <div>
-                            <label className="text-text-secondary text-[10px] uppercase tracking-[0.2em] block mb-6 font-black opacity-50">Category</label>
+                            <label className="text-text-secondary text-[10px] uppercase tracking-[0.2em] block mb-4 sm:mb-6 font-black opacity-50">Category</label>
                             <div className="grid grid-cols-4 gap-3">
                                 {CATEGORIES.map(cat => {
                                     const Icon = cat.icon;

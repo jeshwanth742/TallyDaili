@@ -88,7 +88,7 @@ export const BudgetDetails = () => {
             <div className="absolute inset-0 bg-black/95 backdrop-blur-xl" onClick={closeBudgetDetails} />
 
             {/* Content */}
-            <div className="relative w-full max-w-sm bg-[#0A0A0A] border border-white/5 rounded-[3rem] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.8)] animate-in fade-in zoom-in-95 duration-500">
+            <div className="relative w-full max-w-sm bg-[#0A0A0A] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.8)]">
                 <div className="p-8">
                     {/* Header */}
                     <div className="flex justify-between items-center mb-10">
