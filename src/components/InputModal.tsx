@@ -27,11 +27,12 @@ export const InputModal = ({
 
     useEffect(() => {
         if (isOpen) {
-            setValue(initialValue);
+            // Defer state update to next tick to avoid "setState during render" warning
             setTimeout(() => {
+                setValue(initialValue);
                 inputRef.current?.focus();
                 inputRef.current?.select();
-            }, 100);
+            }, 0);
         }
     }, [isOpen, initialValue, title, type]); // Reset on title/type change too
 

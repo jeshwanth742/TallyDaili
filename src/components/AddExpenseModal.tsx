@@ -57,7 +57,8 @@ export const AddExpenseModal = () => {
 
             {/* Modal Glass Container */}
             {/* Modal Glass Container */}
-            <div className="relative w-full max-w-sm lg:max-w-5xl bg-[#121212] p-4 rounded-[2rem] border border-white/5 shadow-[0_0_100px_rgba(0,0,0,1)] zoom-in-95 duration-300">
+            {/* Modal Glass Container */}
+            <div className="relative w-full lg:max-w-5xl bg-[#121212] p-4 sm:p-6 sm:rounded-[2rem] rounded-t-[2rem] rounded-b-none sm:rounded-b-[2rem] border border-white/5 border-b-0 sm:border-b shadow-[0_0_100px_rgba(0,0,0,1)] animate-in slide-in-from-bottom duration-300 fixed bottom-0 sm:relative sm:bottom-auto">
 
                 {/* Header */}
                 <div className="flex justify-between items-center mb-1">

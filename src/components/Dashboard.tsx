@@ -49,7 +49,7 @@ export const Dashboard = () => {
                         <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group relative">
                             <Shield size={14} />
                             <div className="absolute top-10 right-0 bg-surface border border-neutral-800 p-2 rounded-lg text-[8px] font-black uppercase tracking-widest hidden group-hover:block whitespace-nowrap z-50">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(fixedBuffer)} Reminder
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(fixedBuffer)} Usage Limit Reminder
                             </div>
                         </div>
                     )}
@@ -96,6 +96,13 @@ export const Dashboard = () => {
                     <span className="text-danger text-xs mt-4 font-bold tracking-widest uppercase border border-danger/50 px-3 py-1 rounded-full">
                         Cycle Ended
                     </span>
+                )}
+                {/* Usage Limit Notification */}
+                {fixedBuffer > 0 && totalSpent >= fixedBuffer && !isExpired && (
+                    <div className="mt-4 px-4 py-2 bg-danger/10 border border-danger/30 rounded-xl flex items-center gap-2 animate-bounce">
+                        <Shield size={14} className="text-danger" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-danger">Usage Limit Reached</span>
+                    </div>
                 )}
             </main>
 

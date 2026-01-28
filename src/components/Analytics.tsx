@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useBudget } from '../hooks/useBudget';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import { format, subDays, isSameMonth, isSameDay, startOfDay, startOfYear, eachMonthOfInterval } from 'date-fns';
-import { getCurrencySymbol } from '../utils/currency';
 import { CATEGORIES, getCategoryIcon } from '../utils/categories';
 
 export const Analytics = () => {
     const { transactions, budget, metrics } = useBudget();
     const [selectedDetail, setSelectedDetail] = useState<{ label: string, amount: number, txs: typeof transactions } | null>(null);
     const [range, setRange] = useState<'today' | 'week' | 'month' | 'year'>('week');
+    const [activeIndex, setActiveIndex] = useState<number>(-1);
 
     if (!transactions || !budget || !metrics) return null;
 
@@ -32,7 +32,7 @@ export const Analytics = () => {
     const PIE_COLORS = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#E7E9ED', '#71B37C'];
 
     // 3. Dynamic Bar Chart Logic
-    let barData: any[] = [];
+    let barData: { label: string; amount: number; txs: typeof transactions }[] = [];
     const now = new Date();
 
     if (range === 'today') {
@@ -212,7 +212,15 @@ export const Analytics = () => {
                 </h3>
                 <div className="h-56 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={barData}>
+                        <BarChart
+                            data={barData}
+                            onClick={(data: any) => {
+                                if (data && data.activePayload && data.activePayload.length > 0) {
+                                    setSelectedDetail(data.activePayload[0].payload);
+                                }
+                            }}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <XAxis
                                 dataKey="label"
                                 stroke="#555"
@@ -244,12 +252,6 @@ export const Analytics = () => {
                             <Bar
                                 dataKey="amount"
                                 radius={[6, 6, 6, 6]}
-                                onClick={(data) => {
-                                    if (data && data.payload && data.payload.txs && data.payload.txs.length > 0) {
-                                        setSelectedDetail(data.payload);
-                                    }
-                                }}
-                                style={{ cursor: 'pointer' }}
                             >
                                 {barData.map((entry, index) => (
                                     <Cell
@@ -268,7 +270,25 @@ export const Analytics = () => {
             {/* Category Breakdown */}
             <div className="mb-6">
                 <h3 className="text-left text-[10px] font-black text-text-secondary mb-8 uppercase tracking-[0.2em] opacity-50">Distribution</h3>
-                <div className="h-64 w-full flex items-center justify-center -mb-8 scale-110">
+                <div className="h-64 w-full flex items-center justify-center -mb-8 scale-110 relative">
+                    {/* Centered Info Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                        {activeIndex >= 0 && activeIndex < pieData.length ? (
+                            <div className="text-center animate-in fade-in zoom-in duration-300">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary opacity-60 mb-0.5">{pieData[activeIndex].name}</p>
+                                <p className="text-lg font-black text-white font-mono tracking-tighter">
+                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(pieData[activeIndex].value)}
+                                </p>
+                                <p className="text-[9px] font-black text-primary mt-1">
+                                    {((pieData[activeIndex].value / metrics.totalSpent) * 100).toFixed(0)}%
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="text-center opacity-30">
+                                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-white">Tap Slice</p>
+                            </div>
+                        )}
+                    </div>
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
@@ -276,19 +296,23 @@ export const Analytics = () => {
                                 cx="50%"
                                 cy="50%"
                                 innerRadius={70}
-                                outerRadius={100}
-                                paddingAngle={8}
+                                outerRadius={90}
+                                paddingAngle={5}
                                 dataKey="value"
                                 stroke="none"
+                                onClick={(_, index) => setActiveIndex(index === activeIndex ? -1 : index)}
                             >
                                 {pieData.map((_, index) => (
-                                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={PIE_COLORS[index % PIE_COLORS.length]}
+                                        stroke={activeIndex === index ? '#fff' : 'none'}
+                                        strokeWidth={2}
+                                        style={{ outline: 'none', transition: 'all 0.3s ease' }}
+                                        className="hover:opacity-80 transition-opacity cursor-pointer"
+                                    />
                                 ))}
                             </Pie>
-                            <Tooltip
-                                contentStyle={{ backgroundColor: '#1E1E1E', border: '1px solid #333', borderRadius: '12px', color: '#fff' }}
-                                formatter={(value: any) => [`${getCurrencySymbol(currency)}${value}`, '']}
-                            />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
@@ -308,7 +332,7 @@ export const Analytics = () => {
 
             {/* Drilldown Modal (Details) */}
             {selectedDetail && (
-                <div className="fixed inset-0 z[200] flex items-end sm:items-center justify-center p-4">
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedDetail(null)} />
                     <div className="relative w-full max-w-sm bg-[#1A1A1A] border border-neutral-800 rounded-[2rem] p-6 max-h-[60vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom duration-300">
                         <div className="flex justify-between items-center mb-6">

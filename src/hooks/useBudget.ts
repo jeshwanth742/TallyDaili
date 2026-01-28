@@ -32,7 +32,7 @@ export function useBudget() {
     }
 
     // Defensive Data Parser
-    const safeDate = (d: any) => {
+    const safeDate = (d: unknown) => {
         if (d instanceof Date && !isNaN(d.getTime())) return d;
         if (typeof d === 'string' || typeof d === 'number') {
             const parsed = new Date(d);

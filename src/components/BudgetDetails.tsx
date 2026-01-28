@@ -24,7 +24,7 @@ export const BudgetDetails = () => {
         onSave: () => { },
     });
 
-    const safeFormat = (date: any, fmt: string) => {
+    const safeFormat = (date: Date | string | number | null | undefined, fmt: string) => {
         try {
             if (!date) return 'N/A';
             const d = new Date(date);
@@ -64,7 +64,7 @@ export const BudgetDetails = () => {
 
     const handleEditFixed = () => {
         const currentFixed = budget.fixedExpenses || 0;
-        openModal('Reminder', currentFixed.toString(), async (val) => {
+        openModal('Usage Limit Reminder', currentFixed.toString(), async (val) => {
             const num = parseFloat(val);
             if (!isNaN(num)) await db.budgets.update(budget.id!, { fixedExpenses: num });
         });
@@ -74,7 +74,9 @@ export const BudgetDetails = () => {
         openModal('Budget Days', totalCycleDays.toString(), async (val) => {
             const days = parseInt(val);
             if (days && !isNaN(days)) {
-                const newEndDate = addDays(new Date(budget.startDate), days);
+                // Determine new end date: startDate + (days - 1)
+                // e.g. Start Jan 1, 1 Day duration -> End Jan 1. (1-1=0 adds)
+                const newEndDate = addDays(new Date(budget.startDate), days - 1);
                 await db.budgets.update(budget.id!, { endDate: newEndDate });
             }
         });
@@ -189,7 +191,7 @@ export const BudgetDetails = () => {
                     <div className="grid grid-cols-1 gap-2">
                         {[
                             {
-                                icon: Shield, label: 'Reminder', action: handleEditFixed,
+                                icon: Shield, label: 'Usage Limit Reminder', action: handleEditFixed,
                                 val: new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(budget.fixedExpenses || 0),
                                 color: 'text-primary'
                             },

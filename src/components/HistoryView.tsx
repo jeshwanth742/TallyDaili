@@ -3,7 +3,7 @@ import { useBudget } from '../hooks/useBudget';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { ChevronLeft, ChevronRight, Search, ListIcon, Calendar as CalIcon, Trash2, Plus, ShieldCheck, Clock } from 'lucide-react';
 import { getCategoryIcon } from '../utils/categories';
-import { db } from '../db/db';
+import { db, type PlannedPayment } from '../db/db';
 
 import { InputModal } from './InputModal';
 
@@ -51,7 +51,7 @@ export const HistoryView = () => {
         }
     };
 
-    const handleExecute = async (p: any) => {
+    const handleExecute = async (p: PlannedPayment) => {
         if (confirm(`Convert "${p.note}" spending into a real expense?`)) {
             await db.transactions.add({
                 amount: p.amount,
