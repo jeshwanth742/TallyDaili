@@ -5,6 +5,17 @@ TallyDaili is a premium, minimalist budget tracker designed for **tactical daily
 
 ---
 
+## 🌟 Why TallyDaili?
+
+Most budget apps are backward-looking (tracking what you spent). TallyDaili is **forward-looking**:
+
+-   **Daily Allowance Engine**: Automatically recalculates your daily limit based on yesterday's spending.
+-   **🛡️ Usage Limit Reminder**: Set a "safety buffer" (e.g., ₹5,000). The app warns you if your total spending eats into this reserve.
+-   **📅 Planned Spending**: Reserve money for Rent or EMI. These funds are "hidden" from your daily allowance so you don't accidentally spend them.
+-   **🔒 100% Private**: Data lives on your device (IndexedDB). No sign-ups, no servers, no tracking.
+
+---
+
 ## 📸 Screenshots
 
 ### Dashboard - Your Daily Command Center
@@ -79,6 +90,18 @@ TallyDaili was created through a high-intensity collaborative process between th
     npm run build
     ```
 
+---
+
+## 📲 How to Install
+
+### Option 1: Download APK (Android)
+Go to the **[Actions Tab](../../actions)** in this repository, click the latest workflow run, and download the `app-debug.apk` artifact.
+
+### Option 2: Install as Web App (iOS/Android)
+1.  Open the deployed URL (or local server) in Chrome/Safari.
+2.  Tap **Share** -> **Add to Home Screen**.
+3.  TallyDaili launches as a fullscreen native app.
+Download from the link :- https://github.com/jeshwanth742/TallyDaili/actions/runs/21434409565/artifacts/5286069169
 ---
 
 *Created with ❤️ by Jeshwanth & Antigravity AI.*
